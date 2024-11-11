@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../service/api.service';
 import { ModalController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-mahasiswa',
@@ -15,7 +16,7 @@ export class MahasiswaPage implements OnInit {
   nama: any;
   jurusan: any;
 
-  constructor(private api: ApiService, private modal: ModalController) { }
+  constructor(private api: ApiService, private modal: ModalController, private alertController: AlertController) { }
 
   ngOnInit() {
     this.getMahasiswa();
@@ -137,5 +138,29 @@ export class MahasiswaPage implements OnInit {
         }
       })
   }
+
+  async konfirmasiHapus(id: any) {
+    const alert = await this.alertController.create({
+      header: 'Konfirmasi Hapus',
+      message: 'Apakah Anda yakin ingin menghapus data ini?',
+      buttons: [
+        {
+          text: 'Tidak',
+          role: 'cancel',
+          handler: () => {
+            console.log('Penghapusan dibatalkan');
+          }
+        },
+        {
+          text: 'Ya',
+          handler: () => {
+            this.hapusMahasiswa(id);
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }  
 
 }
